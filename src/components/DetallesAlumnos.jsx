@@ -1,4 +1,10 @@
+import { useEffect } from "react";
 function MostrarAlumnos({alumno}) {
+    useEffect(()=>{
+        if(alumno) {
+            console.log("Alumno Actualizado", alumno)
+        }
+    },[alumno]); //Esto se ejecutará cada vez que alumno cambia
     return (
         <div>
             {alumno ? (
