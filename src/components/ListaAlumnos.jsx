@@ -1,6 +1,8 @@
 import { Container } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
-function ListaAlumnos({ alumnos, onEliminarAlumno }) { // ListaAlumno y onEliminarAlumno
+function ListaAlumnos({ alumnos, onEliminarAlumno, onDetallesAlumno }) { // ListaAlumno y onEliminarAlumno
+    const navigate = useNavigate();
     return (
         <Container>
             <h1>Lista de Alumnos</h1>
@@ -35,6 +37,14 @@ function ListaAlumnos({ alumnos, onEliminarAlumno }) { // ListaAlumno y onElimin
                                     <td>{alumno.teléfono}</td>
                                     <td>
                                         {/* BOTON EDITAR - falta agregar funcion */}
+                                        <button 
+                                            className="btn btn-sm btn-info me-2"
+                                            onClick={() => {
+                                                onDetallesAlumno(alumno);
+                                                navigate("/detalles-alumno")
+                                            }}>
+                                            Detalles
+                                        </button>
                                         <button className="btn btn-sm btn-info me-2">
                                             Editar
                                         </button>

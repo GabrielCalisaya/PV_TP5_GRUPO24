@@ -6,9 +6,12 @@ import NuevoAlumno from "./components/NuevoAlumno";
 import AcercaDe from "./components/AcercaDe";
 import PaginaError from "./components/PaginaError";
 import BarraNavegacion from "./Layout/barraNavegacion";
+import MostrarAlumnos from "./components/DetallesAlumnos";
 
 function Rutas() {
     const [alumnos, setAlumnos] = useState([]);
+
+    const[alumnoSeleccionado, setAlumnoSeleccionado] = useState(null);
 
     const agregarAlumno = (datosNuevoAlumno) => {
         
@@ -32,6 +35,10 @@ function Rutas() {
         }
     };
 
+    const manejarMostrarDetallesAlumno = (alumno) => {
+        setAlumnoSeleccionado(alumno);
+    };
+
     return (
         <BrowserRouter>
             <Routes>
@@ -41,11 +48,17 @@ function Rutas() {
                     {/* Ruta para la lista de alumnos*/}
                     <Route
                         path="lista-alumnos"
-                        element={<ListaAlumnos alumnos={alumnos} onEliminarAlumno={eliminarAlumno} />}
+                        element={
+                        <ListaAlumnos 
+                            alumnos={alumnos} 
+                            onEliminarAlumno={eliminarAlumno} 
+                            onDetallesAlumno={manejarMostrarDetallesAlumno}
+                        />}
                     />
                     {/* Ruta para el formulario de nuevo alumno: le pasamos la función para agregar */}
                     <Route path="nuevo-alumno" element={<NuevoAlumno onAgregarAlumno={agregarAlumno} />} />
                     <Route path="acerca-de" element={<AcercaDe />} />
+                    <Route path="detalles-alumno" element={<MostrarAlumnos alumno={alumnoSeleccionado} />} />
                     <Route path="error" element={<PaginaError />} />
                     {/* Redirección para rutas no encontradas */}
                     <Route path="*" element={<Navigate replace to="/error" />} />
