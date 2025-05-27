@@ -45,7 +45,7 @@ function NuevoAlumno({ onAgregarAlumno }) {
   };
 
   return (
-    <form onSubmit={manejarEnvios}>
+    <form onSubmit={manejarEnvios}className="formulario-nuevo-alumno">
       <h2>Agregar Nuevo Alumno</h2>
       <div>
         <label htmlFor="lu">LU:</label>
@@ -75,7 +75,8 @@ function NuevoAlumno({ onAgregarAlumno }) {
         <label htmlFor="teléfono">Teléfono:</label>
         <input type="text" id="teléfono" name="teléfono" value={formData.teléfono} onChange={manejarCambios} required />
       </div>
-      <button type="submit">Agregar Alumno</button>
+      <button type="submit" className="btn btn-custom">Guardar Alumno</button>
+
     </form>
   );
 }

@@ -1,26 +1,41 @@
 import { useEffect } from "react";
-function MostrarAlumnos({alumno}) {
-    useEffect(()=>{
-        if(alumno) {
-            console.log("Alumno Actualizado", alumno)
-        }
-    },[alumno]); //Esto se ejecutará cada vez que alumno cambia
-    return (
-        <div>
-            {alumno ? (
-                <>
-                <p>LU:{alumno.lu}</p>
-                <p>Nombre:{alumno.nombre}</p>
-                <p>Apellido:{alumno.apellido}</p>
-                <p>Curso:{alumno.curso}</p>
-                <p>Email:{alumno.email}</p>
-                <p>Teléfono:{alumno.telefono}</p>
-                </>
-            ) : (
-                <p>No hay alumno ingresado aún</p>
-            )}
-        </div>
-    );
+import { Container, Card, Button } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+
+
+function MostrarAlumnos({ alumno }) {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (alumno) {
+      console.log("Alumno Actualizado", alumno);
+    }
+  }, [alumno]);
+
+  return (
+    <Container className="detalle-alumno-container mt-4">
+      <h2 className="detalle-alumno-titulo mb-4 text-center">Detalles del Alumno</h2>
+      {alumno ? (
+        <Card className="detalle-alumno-card shadow rounded p-4 bg-dark text-light">
+          <p><strong>LU:</strong> {alumno.lu}</p>
+          <p><strong>Nombre:</strong> {alumno.nombre}</p>
+          <p><strong>Apellido:</strong> {alumno.apellido}</p>
+          <p><strong>Curso:</strong> {alumno.curso}</p>
+          <p><strong>Email:</strong> {alumno.email}</p>
+          <p><strong>Teléfono:</strong> {alumno.telefono}</p>
+          <Button 
+            variant="galactico" 
+            className="detalle-alumno-btn mt-3"
+            onClick={() => navigate(-1)}
+          >
+            Volver
+          </Button>
+        </Card>
+      ) : (
+        <p className="detalle-alumno-sin-datos text-center">No hay alumno ingresado aún</p>
+      )}
+    </Container>
+  );
 }
 
 export default MostrarAlumnos;
