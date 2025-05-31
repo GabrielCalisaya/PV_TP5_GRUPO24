@@ -22,9 +22,9 @@ function MostrarAlumnos({ alumno }) {
           <p><strong>Apellido:</strong> {alumno.apellido}</p>
           <p><strong>Curso:</strong> {alumno.curso}</p>
           <p><strong>Email:</strong> {alumno.email}</p>
-          <p><strong>Teléfono:</strong> {alumno.telefono}</p>
-          <Button 
-            variant="galactico" 
+          <p><strong>Teléfono:</strong> {alumno.teléfono}</p>
+          <Button
+            variant="galactico"
             className="detalle-alumno-btn mt-3"
             onClick={() => navigate(-1)}
           >
