@@ -11,7 +11,7 @@ import MostrarAlumnos from "./components/DetallesAlumnos";
 function Rutas() {
     const [alumnos, setAlumnos] = useState([]);
     const [alumnoSeleccionado, setAlumnoSeleccionado] = useState(null);
-
+    const [alumnosEliminados, setAlmnosEliminados] = useState([]);
     const agregarAlumno = (datosNuevoAlumno) => {
         const alumnoConId = {
             id: alumnos.length > 0 ? Math.max(...alumnos.map(s => s.id)) + 1 : 1,
@@ -25,6 +25,9 @@ function Rutas() {
         const isConfirmed = window.confirm(`¿Estás seguro de que quieres eliminar al alumno con ID: ${idAEliminar}?`);
         if (isConfirmed) {
             setAlumnos((alumnosPrevios) => alumnosPrevios.filter(alumno => alumno.id !== idAEliminar));
+            const alumnoEliminado = alumnos.find(alumno => alumno.id === idAEliminar);
+            setAlmnosEliminados((prev) => [...prev, alumnoEliminado])
+
             alert(`Alumno con ID: ${idAEliminar} eliminado.`);
         } else {
             alert("Eliminación cancelada.");
@@ -44,6 +47,9 @@ function Rutas() {
         setAlumnoSeleccionado(alumno);
     };
 
+
+
+
     return (
         <BrowserRouter>
             <Routes>
@@ -53,6 +59,7 @@ function Rutas() {
                         path="lista-alumnos"
                         element={
                             <ListaAlumnos
+                                alumnosEliminados={alumnosEliminados}
                                 alumnos={alumnos}
                                 onEliminarAlumno={eliminarAlumno}
                                 onDetallesAlumno={manejarMostrarDetallesAlumno}
@@ -60,7 +67,7 @@ function Rutas() {
                             />
                         }
                     />
-                    <Route path="nuevo-alumno" element={<NuevoAlumno onAgregarAlumno={agregarAlumno} />} />
+                    <Route path="nuevo-alumno" element={<NuevoAlumno alumnos={alumnos} onAgregarAlumno={agregarAlumno} />} />
                     <Route path="acerca-de" element={<AcercaDe />} />
                     <Route path="detalles-alumno" element={<MostrarAlumnos alumno={alumnoSeleccionado} />} />
                     <Route path="error" element={<PaginaError />} />

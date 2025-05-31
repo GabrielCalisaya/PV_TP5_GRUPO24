@@ -1,10 +1,10 @@
-import { Container } from "react-bootstrap";
+import { Button, Container } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
-function ListaAlumnos({ alumnos, onEliminarAlumno, onDetallesAlumno, onEditarAlumno }) {
+function ListaAlumnos({ alumnos, onEliminarAlumno, onDetallesAlumno, onEditarAlumno, alumnosEliminados }) {
     const navigate = useNavigate();
-
+    const [buttonOpen, setButtonOpen] = useState(false);
     const [alumnoEditandoId, setAlumnoEditandoId] = useState(null);
     const [valoresEditados, setValoresEditados] = useState({});
 
@@ -18,8 +18,9 @@ function ListaAlumnos({ alumnos, onEliminarAlumno, onDetallesAlumno, onEditarAlu
 
     // Inicia la edición para un alumno
     const iniciarEdicion = (alumno) => {
+        console.log(alumno, "Valores Editados");
         setAlumnoEditandoId(alumno.id);
-        setValoresEditados({ ...alumno });
+        setValoresEditados(alumno);
     };
 
     // Guarda los cambios llamando a la función que viene del padre
@@ -35,8 +36,10 @@ function ListaAlumnos({ alumnos, onEliminarAlumno, onDetallesAlumno, onEditarAlu
         setValoresEditados({});
     };
 
+
+
     return (
-        
+
         <Container className="mt-4">
             <h1 className="mb-4 text-center">Lista de Alumnos</h1>
 
@@ -116,25 +119,25 @@ function ListaAlumnos({ alumnos, onEliminarAlumno, onDetallesAlumno, onEditarAlu
                                             <td>
                                                 <input
                                                     type="text"
-                                                    value={valoresEditados.telefono || ""}
-                                                    onChange={(e) => manejarCambio(e, "telefono")}
+                                                    value={valoresEditados.teléfono || ""}
+                                                    onChange={(e) => manejarCambio(e, "teléfono")}
                                                     className="form-control form-control-sm"
                                                 />
                                             </td>
                                             <td>
-  <button
-    className="btn-guardar btn btn-sm me-2"
-    onClick={guardarCambios}
-  >
-    Guardar
-  </button>
-  <button
-    className="btn-cancelar btn btn-sm btn-secondary"
-    onClick={cancelarEdicion}
-  >
-    Cancelar
-  </button>
-</td>
+                                                <button
+                                                    className="btn-guardar btn btn-sm me-2"
+                                                    onClick={guardarCambios}
+                                                >
+                                                    Guardar
+                                                </button>
+                                                <button
+                                                    className="btn-cancelar btn btn-sm btn-secondary"
+                                                    onClick={cancelarEdicion}
+                                                >
+                                                    Cancelar
+                                                </button>
+                                            </td>
                                         </>
                                     ) : (
                                         <>
@@ -144,7 +147,7 @@ function ListaAlumnos({ alumnos, onEliminarAlumno, onDetallesAlumno, onEditarAlu
                                             <td>{alumno.curso}</td>
                                             <td>{alumno.email}</td>
                                             <td>{alumno.domicilio}</td>
-                                            <td>{alumno.telefono}</td>
+                                            <td>{alumno.teléfono}</td>
                                             <td>
                                                 <button
                                                     className="btn btn-sm btn-info me-2"
@@ -174,6 +177,20 @@ function ListaAlumnos({ alumnos, onEliminarAlumno, onDetallesAlumno, onEditarAlu
                             ))}
                         </tbody>
                     </table>
+                </div>
+            )};
+            {alumnosEliminados?.length > 0 && (<Button onClick={() => setButtonOpen(!buttonOpen)} variant="info"> {buttonOpen ? "Cerrar lista" : "Mostrar Alumnos eliminados"} </Button>)}
+
+            {buttonOpen && alumnosEliminados.length > 0 && (
+                <div className="mt-4">
+                    <h2>Alumnos Eliminados</h2>
+                    <ul className="list-group">
+                        {alumnosEliminados.map((alumno) => (
+                            <li key={alumno.id} className="list-group-item">
+                                {alumno.nombre} {alumno.apellido} (LU: {alumno.lu})
+                            </li>
+                        ))}
+                    </ul>
                 </div>
             )}
         </Container>

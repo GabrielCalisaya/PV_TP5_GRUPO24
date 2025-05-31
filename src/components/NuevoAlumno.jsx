@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-function NuevoAlumno({ onAgregarAlumno }) {
+function NuevoAlumno({ onAgregarAlumno, alumnos }) {
   const [formData, aplicarCambios] = useState({
     lu: '',
     nombre: '',
@@ -21,6 +21,33 @@ function NuevoAlumno({ onAgregarAlumno }) {
 
   const manejarEnvios = (e) => {
     e.preventDefault();
+    if (alumnos.some(alumno => alumno.lu === formData.lu)) {
+      alert('Ya existe un alumno con ese LU. Por favor, ingresa un LU diferente.');
+      aplicarCambios({
+        lu: '',
+        nombre: '',
+        apellido: '',
+        curso: '',
+        email: '',
+        domicilio: '',
+        teléfono: '',
+      });
+      return;
+    }
+
+    if (alumnos.some(alumno => alumno.email === formData.email)) {
+      alert('Ya existe un alumno con ese email. Por favor, ingresa un email diferente.');
+      aplicarCambios({
+        lu: '',
+        nombre: '',
+        apellido: '',
+        curso: '',
+        email: '',
+        domicilio: '',
+        teléfono: '',
+      });
+      return;
+    }
 
     if (!formData.lu.trim() || !formData.nombre.trim() || !formData.apellido.trim()) {
       alert('Los campos LU, Nombre y Apellido son obligatorios.');
@@ -45,7 +72,7 @@ function NuevoAlumno({ onAgregarAlumno }) {
   };
 
   return (
-    <form onSubmit={manejarEnvios}className="formulario-nuevo-alumno">
+    <form onSubmit={manejarEnvios} className="formulario-nuevo-alumno">
       <h2>Agregar Nuevo Alumno</h2>
       <div>
         <label htmlFor="lu">LU:</label>
