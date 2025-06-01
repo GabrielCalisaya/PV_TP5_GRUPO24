@@ -470,3 +470,10 @@ footer {
   background-color: #e455b5; /* rosa más oscuro */
   box-shadow: 0 6px 15px rgba(228, 85, 181, 0.7);
 }
+
+/* === Flechas de Carousel ===*/
+
+.carousel-black-arrows .carousel-control-prev-icon,
+.carousel-black-arrows .carousel-control-next-icon {
+    filter: invert(1) brightness(0);
+}
