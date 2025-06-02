@@ -277,6 +277,7 @@ form select {
 .btn-danger:hover {
   transform: scale(1.05);
   box-shadow: 0 0 12px rgba(255, 59, 59, 0.7);
+  color: black;
 }
 /* === HOME y ACERCA DE === */
 .home-container,
@@ -476,4 +477,31 @@ footer {
 .carousel-black-arrows .carousel-control-prev-icon,
 .carousel-black-arrows .carousel-control-next-icon {
     filter: invert(1) brightness(0);
+}
+
+
+.lista-alumnos{
+  display: grid;
+  grid-template-columns: repeat(2,1fr);
+  gap: 10px;
+}
+
+/*Estilos Responsive*/
+@media (max-width: 468px) {
+    .lista-alumnos{
+      display: flex;
+      flex-direction: column;
+    }
+}
+
+.alumno-card{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #e9e6fa;
+  padding: 1rem;
+  border-radius: .5rem;
+  min-height: 15rem;
+  border: solid slategrey;
 }

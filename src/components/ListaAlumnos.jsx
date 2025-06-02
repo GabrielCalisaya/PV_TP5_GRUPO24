@@ -1,6 +1,7 @@
 import { Button, Container } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import "../styles/style.css"; 
 
 function ListaAlumnos({ alumnos, onEliminarAlumno, onDetallesAlumno, onEditarAlumno, alumnosEliminados }) {
     const navigate = useNavigate();
@@ -20,7 +21,8 @@ function ListaAlumnos({ alumnos, onEliminarAlumno, onDetallesAlumno, onEditarAlu
     const iniciarEdicion = (alumno) => {
         console.log(alumno, "Valores Editados");
         setAlumnoEditandoId(alumno.id);
-        setValoresEditados(alumno);
+        // Hacemos una copia profunda de alumno para evitar mutaciones directas del estado original
+        setValoresEditados({ ...alumno });
     };
 
     // Guarda los cambios llamando a la función que viene del padre
@@ -36,150 +38,149 @@ function ListaAlumnos({ alumnos, onEliminarAlumno, onDetallesAlumno, onEditarAlu
         setValoresEditados({});
     };
 
-
-
     return (
-
-        <Container className="mt-4">
-            <h1 className="mb-4 text-center">Lista de Alumnos</h1>
+        <Container className="container-alumnos mt-4">
+            
 
             {alumnos.length === 0 ? (
                 <p className="text-center">No hay alumnos registrados aún.</p>
             ) : (
-                <div className="table-responsive shadow rounded">
-                    <table className="table table-striped table-hover align-middle">
-                        <thead className="table-dark">
-                            <tr>
-                                <th>ID</th>
-                                <th>LU</th>
-                                <th>Nombre</th>
-                                <th>Apellido</th>
-                                <th>Curso</th>
-                                <th>Email</th>
-                                <th>Domicilio</th>
-                                <th>Teléfono</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {alumnos.map((alumno) => (
-                                <tr key={alumno.id}>
-                                    <td>{alumno.id}</td>
-
-                                    {alumnoEditandoId === alumno.id ? (
-                                        <>
-                                            <td>
-                                                <input
-                                                    type="text"
-                                                    value={valoresEditados.lu || ""}
-                                                    onChange={(e) => manejarCambio(e, "lu")}
-                                                    className="form-control form-control-sm"
-                                                />
-                                            </td>
-                                            <td>
-                                                <input
-                                                    type="text"
-                                                    value={valoresEditados.nombre || ""}
-                                                    onChange={(e) => manejarCambio(e, "nombre")}
-                                                    className="form-control form-control-sm"
-                                                />
-                                            </td>
-                                            <td>
-                                                <input
-                                                    type="text"
-                                                    value={valoresEditados.apellido || ""}
-                                                    onChange={(e) => manejarCambio(e, "apellido")}
-                                                    className="form-control form-control-sm"
-                                                />
-                                            </td>
-                                            <td>
-                                                <input
-                                                    type="text"
-                                                    value={valoresEditados.curso || ""}
-                                                    onChange={(e) => manejarCambio(e, "curso")}
-                                                    className="form-control form-control-sm"
-                                                />
-                                            </td>
-                                            <td>
-                                                <input
-                                                    type="email"
-                                                    value={valoresEditados.email || ""}
-                                                    onChange={(e) => manejarCambio(e, "email")}
-                                                    className="form-control form-control-sm"
-                                                />
-                                            </td>
-                                            <td>
-                                                <input
-                                                    type="text"
-                                                    value={valoresEditados.domicilio || ""}
-                                                    onChange={(e) => manejarCambio(e, "domicilio")}
-                                                    className="form-control form-control-sm"
-                                                />
-                                            </td>
-                                            <td>
-                                                <input
-                                                    type="text"
-                                                    value={valoresEditados.teléfono || ""}
-                                                    onChange={(e) => manejarCambio(e, "teléfono")}
-                                                    className="form-control form-control-sm"
-                                                />
-                                            </td>
-                                            <td>
-                                                <button
-                                                    className="btn-guardar btn btn-sm me-2"
-                                                    onClick={guardarCambios}
-                                                >
-                                                    Guardar
-                                                </button>
-                                                <button
-                                                    className="btn-cancelar btn btn-sm btn-secondary"
-                                                    onClick={cancelarEdicion}
-                                                >
-                                                    Cancelar
-                                                </button>
-                                            </td>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <td>{alumno.lu}</td>
-                                            <td>{alumno.nombre}</td>
-                                            <td>{alumno.apellido}</td>
-                                            <td>{alumno.curso}</td>
-                                            <td>{alumno.email}</td>
-                                            <td>{alumno.domicilio}</td>
-                                            <td>{alumno.teléfono}</td>
-                                            <td>
-                                                <button
-                                                    className="btn btn-sm btn-info me-2"
-                                                    onClick={() => {
-                                                        onDetallesAlumno(alumno);
-                                                        navigate("/detalles-alumno");
-                                                    }}
-                                                >
-                                                    Detalles
-                                                </button>
-                                                <button
-                                                    className="btn btn-sm btn-warning me-2"
-                                                    onClick={() => iniciarEdicion(alumno)}
-                                                >
-                                                    Editar
-                                                </button>
-                                                <button
-                                                    className="btn btn-sm btn-danger"
-                                                    onClick={() => onEliminarAlumno(alumno.id)}
-                                                >
-                                                    Eliminar
-                                                </button>
-                                            </td>
-                                        </>
-                                    )}
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                
+                <div className="lista-alumnos">
+                    {alumnos.map((alumno) => (
+                        
+                        <div key={alumno.id} className="alumno-card">
+                            {alumnoEditandoId === alumno.id ? (
+                                // Modo edición
+                                <>
+                                    <div className="form-group mb-2">
+                                        <label htmlFor={`lu-${alumno.id}`}>LU:</label>
+                                        <input
+                                            id={`lu-${alumno.id}`}
+                                            type="text"
+                                            value={valoresEditados.lu || ""}
+                                            onChange={(e) => manejarCambio(e, "lu")}
+                                            className="form-control form-control-sm"
+                                        />
+                                    </div>
+                                    <div className="form-group mb-2">
+                                        <label htmlFor={`nombre-${alumno.id}`}>Nombre:</label>
+                                        <input
+                                            id={`nombre-${alumno.id}`}
+                                            type="text"
+                                            value={valoresEditados.nombre || ""}
+                                            onChange={(e) => manejarCambio(e, "nombre")}
+                                            className="form-control form-control-sm"
+                                        />
+                                    </div>
+                                    <div className="form-group mb-2">
+                                        <label htmlFor={`apellido-${alumno.id}`}>Apellido:</label>
+                                        <input
+                                            id={`apellido-${alumno.id}`}
+                                            type="text"
+                                            value={valoresEditados.apellido || ""}
+                                            onChange={(e) => manejarCambio(e, "apellido")}
+                                            className="form-control form-control-sm"
+                                        />
+                                    </div>
+                                    <div className="form-group mb-2">
+                                        <label htmlFor={`curso-${alumno.id}`}>Curso:</label>
+                                        <input
+                                            id={`curso-${alumno.id}`}
+                                            type="text"
+                                            value={valoresEditados.curso || ""}
+                                            onChange={(e) => manejarCambio(e, "curso")}
+                                            className="form-control form-control-sm"
+                                        />
+                                    </div>
+                                    <div className="form-group mb-2">
+                                        <label htmlFor={`email-${alumno.id}`}>Email:</label>
+                                        <input
+                                            id={`email-${alumno.id}`}
+                                            type="email"
+                                            value={valoresEditados.email || ""}
+                                            onChange={(e) => manejarCambio(e, "email")}
+                                            className="form-control form-control-sm"
+                                        />
+                                    </div>
+                                    <div className="form-group mb-2">
+                                        <label htmlFor={`domicilio-${alumno.id}`}>Domicilio:</label>
+                                        <input
+                                            id={`domicilio-${alumno.id}`}
+                                            type="text"
+                                            value={valoresEditados.domicilio || ""}
+                                            onChange={(e) => manejarCambio(e, "domicilio")}
+                                            className="form-control form-control-sm"
+                                        />
+                                    </div>
+                                    <div className="form-group mb-2">
+                                        <label htmlFor={`telefono-${alumno.id}`}>Teléfono:</label>
+                                        <input
+                                            id={`telefono-${alumno.id}`}
+                                            type="text"
+                                            value={valoresEditados.teléfono || ""}
+                                            onChange={(e) => manejarCambio(e, "teléfono")}
+                                            className="form-control form-control-sm"
+                                        />
+                                    </div>
+                                    <div className="d-flex justify-content-end mt-3">
+                                        <button
+                                            className="btn-guardar btn btn-sm me-2"
+                                            onClick={guardarCambios}
+                                        >
+                                            Guardar
+                                        </button>
+                                        <button
+                                            className="btn-cancelar btn btn-sm btn-secondary"
+                                            onClick={cancelarEdicion}
+                                        >
+                                            Cancelar
+                                        </button>
+                                    </div>
+                                </>
+                            ) : (
+                                // Modo visualización
+                                <>
+                                    <h4>{alumno.nombre} {alumno.apellido}</h4>
+                                    <p><span>ID: </span>{alumno.id}</p>
+                                    
+                                    
+                                    <div className="d-flex justify-content-end mt-3">
+                                        <button
+                                            className="btn btn-sm btn-info me-2"
+                                            onClick={() => {
+                                                onDetallesAlumno(alumno);
+                                                navigate("/detalles-alumno");
+                                            }}
+                                        >
+                                            Detalles
+                                        </button>
+                                        <button
+                                            className="btn btn-sm btn-warning me-2"
+                                            onClick={() => iniciarEdicion(alumno)}
+                                        >
+                                            Editar
+                                        </button>
+                                        <button
+                                            className="btn btn-sm btn-danger"
+                                            onClick={() => onEliminarAlumno(alumno.id)}
+                                        >
+                                            Eliminar
+                                        </button>
+                                    </div>
+                                </>
+                            )}
+                        </div>
+                    ))}
                 </div>
-            )};
-            {alumnosEliminados?.length > 0 && (<Button onClick={() => setButtonOpen(!buttonOpen)} variant="info"> {buttonOpen ? "Cerrar lista" : "Mostrar Alumnos eliminados"} </Button>)}
+            )}
+
+            {/* Sección de alumnos eliminados */}
+            {alumnosEliminados?.length > 0 && (
+                <Button onClick={() => setButtonOpen(!buttonOpen)} variant="info" className="mt-4"> 
+                    {buttonOpen ? "Cerrar lista" : "Mostrar Alumnos eliminados"} 
+                </Button>
+            )}
 
             {buttonOpen && alumnosEliminados.length > 0 && (
                 <div className="mt-4">
