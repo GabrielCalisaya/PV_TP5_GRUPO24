@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import "../styles/style.css";
 
-function NuevoAlumno({ onAgregarAlumno, alumnos }) {
+// Añadi onReactivarYActualizarAlumno - Gabriel
+function NuevoAlumno({ onAgregarAlumno, alumnos, alumnosEliminados, onReactivarYActualizarAlumno }) {
   const [formData, aplicarCambios] = useState({
     lu: '',
     nombre: '',
@@ -21,42 +23,79 @@ function NuevoAlumno({ onAgregarAlumno, alumnos }) {
 
   const manejarEnvios = (e) => {
     e.preventDefault();
-    if (alumnos.some(alumno => alumno.lu === formData.lu)) {
-      alert('Ya existe un alumno con ese LU. Por favor, ingresa un LU diferente.');
-      aplicarCambios({
-        lu: '',
-        nombre: '',
-        apellido: '',
-        curso: '',
-        email: '',
-        domicilio: '',
-        teléfono: '',
-      });
-      return;
-    }
 
-    if (alumnos.some(alumno => alumno.email === formData.email)) {
-      alert('Ya existe un alumno con ese email. Por favor, ingresa un email diferente.');
-      aplicarCambios({
-        lu: '',
-        nombre: '',
-        apellido: '',
-        curso: '',
-        email: '',
-        domicilio: '',
-        teléfono: '',
-      });
-      return;
-    }
-
+    // validamos de campos obligatorios
     if (!formData.lu.trim() || !formData.nombre.trim() || !formData.apellido.trim()) {
       alert('Los campos LU, Nombre y Apellido son obligatorios.');
       return;
     }
-    // Llama a la función onAgregarAlumno desde el componente padre
+
+    // verificar existencia en alumnos ACTIVOS por LU
+    const alumnoActivoExistentePorLu = alumnos.find(alumno => alumno.lu === formData.lu);
+    if (alumnoActivoExistentePorLu) {
+      alert('Ya existe un alumno ACTIVO con ese LU. Por favor, ingresa un LU diferente.');
+      aplicarCambios({
+        lu: '',
+        nombre: '',
+        apellido: '',
+        curso: '',
+        email: '',
+        domicilio: '',
+        teléfono: '',
+      });
+      return;
+    }
+
+    const alumnoActivoExistentePorEmail = alumnos.find(alumno => alumno.email === formData.email);
+    if (alumnoActivoExistentePorEmail) {
+      alert('Ya existe un alumno ACTIVO con ese email. Por favor, ingresa un email diferente.');
+      aplicarCambios({
+        lu: '',
+        nombre: '',
+        apellido: '',
+        curso: '',
+        email: '',
+        domicilio: '',
+        teléfono: '',
+      });
+      return;
+    }
+
+const alumnoEliminadoExistentePorLu = alumnosEliminados.find(alumno => alumno.lu === formData.lu);
+if (alumnoEliminadoExistentePorLu) {
+    onReactivarYActualizarAlumno({ ...formData, id: alumnoEliminadoExistentePorLu.id });
+    aplicarCambios({
+        lu: '',
+        nombre: '',
+        apellido: '',
+        curso: '',
+        email: '',
+        domicilio: '',
+        teléfono: '',
+    });
+    navigate('/lista-alumnos');
+    return;
+}
+
+    const alumnoEliminadoExistentePorEmail = alumnosEliminados.find(alumno => alumno.email === formData.email);
+    if (alumnoEliminadoExistentePorEmail) {
+        // Si el email pertenece a un alumno eliminado, se le informa al usuario
+        alert('Este email fue utilizado por un alumno eliminado. Por favor, usa otro email o reactiva el alumno con su LU original.');
+        aplicarCambios({
+            lu: '',
+            nombre: '',
+            apellido: '',
+            curso: '',
+            email: '',
+            domicilio: '',
+            teléfono: '',
+        });
+        return;
+    }
+
+    // Si no existe en activos ni se reactivó un eliminado, procede a agregar un nuevo alumno
     onAgregarAlumno(formData);
 
-    // Limpia el formulario despues de agregar
     aplicarCambios({
       lu: '',
       nombre: '',
@@ -67,7 +106,6 @@ function NuevoAlumno({ onAgregarAlumno, alumnos }) {
       teléfono: '',
     });
 
-    // Ahora, redirige a la pagina de lista de alumnos
     navigate('/lista-alumnos');
   };
 
