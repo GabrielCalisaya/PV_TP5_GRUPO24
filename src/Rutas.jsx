@@ -7,6 +7,7 @@ import AcercaDe from "./components/AcercaDe";
 import PaginaError from "./components/PaginaError";
 import BarraNavegacion from "./Layout/barraNavegacion";
 import MostrarAlumnos from "./components/DetallesAlumnos";
+import EditarAlumno from "./components/EditarAlumno";
 
 function Rutas() {
     const [alumnos, setAlumnos] = useState([]);
@@ -27,7 +28,6 @@ function Rutas() {
             setAlumnos((alumnosPrevios) => alumnosPrevios.filter(alumno => alumno.id !== idAEliminar));
             const alumnoEliminado = alumnos.find(alumno => alumno.id === idAEliminar);
             setAlmnosEliminados((prev) => [...prev, alumnoEliminado])
-
             alert(`Alumno con ID: ${idAEliminar} eliminado.`);
         } else {
             alert("Eliminación cancelada.");
@@ -47,9 +47,6 @@ function Rutas() {
         setAlumnoSeleccionado(alumno);
     };
 
-
-
-
     return (
         <BrowserRouter>
             <Routes>
@@ -63,13 +60,13 @@ function Rutas() {
                                 alumnos={alumnos}
                                 onEliminarAlumno={eliminarAlumno}
                                 onDetallesAlumno={manejarMostrarDetallesAlumno}
-                                onEditarAlumno={editarAlumno}  // <--- Aquí debe estar
                             />
                         }
                     />
                     <Route path="nuevo-alumno" element={<NuevoAlumno alumnos={alumnos} onAgregarAlumno={agregarAlumno} />} />
                     <Route path="acerca-de" element={<AcercaDe />} />
                     <Route path="detalles-alumno" element={<MostrarAlumnos alumno={alumnoSeleccionado} />} />
+                    <Route path="editar-alumno/:id" element={<EditarAlumno alumnos={alumnos} onEditarAlumno={editarAlumno} />} />
                     <Route path="error" element={<PaginaError />} />
                     <Route path="*" element={<Navigate replace to="/error" />} />
                 </Route>
