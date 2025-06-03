@@ -12,7 +12,8 @@ import EditarAlumno from "./components/EditarAlumno";
 function Rutas() {
     const [alumnos, setAlumnos] = useState([]);
     const [alumnoSeleccionado, setAlumnoSeleccionado] = useState(null);
-    const [alumnosEliminados, setAlmnosEliminados] = useState([]);
+    const [alumnosEliminados, setAlumnosEliminados] = useState([]);
+
     const agregarAlumno = (datosNuevoAlumno) => {
         const alumnoConId = {
             id: alumnos.length > 0 ? Math.max(...alumnos.map(s => s.id)) + 1 : 1,
@@ -25,10 +26,24 @@ function Rutas() {
     const eliminarAlumno = (idAEliminar) => {
         const isConfirmed = window.confirm(`¿Estás seguro de que quieres eliminar al alumno con ID: ${idAEliminar}?`);
         if (isConfirmed) {
-            setAlumnos((alumnosPrevios) => alumnosPrevios.filter(alumno => alumno.id !== idAEliminar));
-            const alumnoEliminado = alumnos.find(alumno => alumno.id === idAEliminar);
-            setAlmnosEliminados((prev) => [...prev, alumnoEliminado])
-            alert(`Alumno con ID: ${idAEliminar} eliminado.`);
+            let alumnoEliminadoTemp = null;
+            setAlumnos((alumnosPrevios) => {
+                const updatedAlumnos = alumnosPrevios.filter(alumno => {
+                    if (alumno.id === idAEliminar) {
+                        alumnoEliminadoTemp = alumno;
+                        return false;
+                    }
+                    return true;
+                });
+                return updatedAlumnos;
+            });
+
+            if (alumnoEliminadoTemp) {
+                setAlumnosEliminados((prev) => [...prev, alumnoEliminadoTemp]);
+                alert(`Alumno con ID: ${idAEliminar} eliminado.`);
+            } else {
+                 alert(`No se encontró al alumno con ID: ${idAEliminar}.`);
+            }
         } else {
             alert("Eliminación cancelada.");
         }
@@ -42,6 +57,21 @@ function Rutas() {
         );
         alert(`Alumno ${alumnoEditado.nombre} ${alumnoEditado.apellido} actualizado!`);
     };
+
+const reactivarYActualizarAlumno = (alumnoReactivado) => {
+    setAlumnosEliminados((prevEliminados) =>
+        prevEliminados.filter((al) => al.lu !== alumnoReactivado.lu)
+    );
+
+    // Agregamos el alumno a la lista de activos con los datos nuevos
+    // Usamos directamente el ID que ya viene en alumnoReactivado (el ID original del alumn eliminado)
+    setAlumnos((alumnosPrevios) => [
+        ...alumnosPrevios,
+        alumnoReactivado 
+    ]);
+
+    alert(`Alumno ${alumnoReactivado.nombre} ${alumnoReactivado.apellido} ha sido reactivado y actualizado.`);
+};
 
     const manejarMostrarDetallesAlumno = (alumno) => {
         setAlumnoSeleccionado(alumno);
@@ -63,7 +93,17 @@ function Rutas() {
                             />
                         }
                     />
-                    <Route path="nuevo-alumno" element={<NuevoAlumno alumnos={alumnos} onAgregarAlumno={agregarAlumno} />} />
+                    <Route
+                        path="nuevo-alumno"
+                        element={
+                            <NuevoAlumno
+                                alumnos={alumnos}
+                                alumnosEliminados={alumnosEliminados}
+                                onAgregarAlumno={agregarAlumno}
+                                onReactivarYActualizarAlumno={reactivarYActualizarAlumno} // Pasamos la nueva función
+                            />
+                        }
+                    />
                     <Route path="acerca-de" element={<AcercaDe />} />
                     <Route path="detalles-alumno" element={<MostrarAlumnos alumno={alumnoSeleccionado} />} />
                     <Route path="editar-alumno/:id" element={<EditarAlumno alumnos={alumnos} onEditarAlumno={editarAlumno} />} />
